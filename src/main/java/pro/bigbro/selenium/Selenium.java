@@ -105,7 +105,7 @@ public class Selenium {
         passwordField.sendKeys(password);
 
         getDriver().findElement(By.id("passwordNext")).click();
-        Thread.sleep(1000);
+        Thread.sleep(7000);
         waitForJSandJQueryToLoad();
     }
 

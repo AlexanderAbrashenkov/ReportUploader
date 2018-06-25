@@ -1,5 +1,8 @@
 package pro.bigbro.services.counting;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -152,7 +155,7 @@ public class SeleniumService {
 
     private void importCityFile(File file, City city) throws InterruptedException {
         driver.get(siteName);
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         selenium.waitForJSandJQueryToLoad();
 
         driver.findElement(By.id("docs-homescreen-add")).click();
@@ -173,7 +176,7 @@ public class SeleniumService {
         System.out.println("iframe id = " + iframe.getAttribute("id"));
         driver.switchTo().frame(iframe);
 
-        driver.findElements(By.className("An-Aq-Zb-Jr")).get(3).click();
+        driver.findElements(By.className("Dn-Bq-Zb-Kr")).get(3).click();
         Thread.sleep(1000);
         selenium.waitForJSandJQueryToLoad();
 
@@ -240,11 +243,21 @@ public class SeleniumService {
         selenium.waitForJSandJQueryToLoad();
 
         driver.findElements(By.className("gwt-Button")).get(0).click();
-        Thread.sleep(20000);
+        Thread.sleep(2000);
+        boolean isScriptGoing = true;
+        while (isScriptGoing) {
+            Document document = Jsoup.parse(driver.getPageSource());
+            Elements elements = document.getElementsByClass("docs-butterbar-message");
+            if (elements.size() > 0) {
+                Thread.sleep(2000);
+            } else {
+                isScriptGoing = false;
+            }
+        }
         selenium.waitForJSandJQueryToLoad();
 
         driver.findElement(By.id("runButton")).click();
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         selenium.waitForJSandJQueryToLoad();
 
         driver.findElements(By.className("gwt-Button")).get(0).click();
@@ -268,16 +281,36 @@ public class SeleniumService {
         selenium.waitForJSandJQueryToLoad();
 
         driver.findElements(By.className("xTI6Gf")).get(3).click();
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         selenium.waitForJSandJQueryToLoad();
 
         handles = driver.getWindowHandles().stream().toArray(String[]::new);
         System.out.println(Arrays.toString(handles));
         driver.switchTo().window(handles[handles.length - 1]);
+        driver.manage().window().maximize();
 
         driver.findElements(By.className("RveJvd")).get(1).click();
+        Thread.sleep(2000);
         driver.switchTo().window(handles[1]);
-        Thread.sleep(30000);
+        Thread.sleep(3000);
+
+        Document document = Jsoup.parse(driver.getPageSource());
+        Elements elements = document.getElementsByClass("docs-butterbar-message");
+        if (elements.size() == 0) {
+            driver.findElement(By.id("runButton")).click();
+        }
+
+        Thread.sleep(2000);
+        isScriptGoing = true;
+        while (isScriptGoing) {
+            document = Jsoup.parse(driver.getPageSource());
+            elements = document.getElementsByClass("docs-butterbar-message");
+            if (elements.size() > 0) {
+                Thread.sleep(2000);
+            } else {
+                isScriptGoing = false;
+            }
+        }
         selenium.waitForJSandJQueryToLoad();
 
         handles = driver.getWindowHandles().stream().toArray(String[]::new);
